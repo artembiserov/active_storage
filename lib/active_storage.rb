@@ -16,13 +16,11 @@ module ActiveStorage
 
   class_methods do
     def count
-      CSV.read(storage_path, col_sep: ";").size - 1 # There are headers
+      records.size
     end
 
     def where(attrs = {})
-      records.select do |record|
-        attrs.inject(true) { |result, (key, value)| result && record.public_send(key) == value }
-      end
+      Relation.new(records).where(attrs)
     end
 
     def records
@@ -34,7 +32,6 @@ module ActiveStorage
         params = Hash[*[headers, record].transpose.flatten]
         Product.new(params)
       end
-      Relation.new(records)
     end
 
     def attributes(*attrs)

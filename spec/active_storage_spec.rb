@@ -28,5 +28,11 @@ describe 'ActiveStorages' do
 
       it { is_expected.to eq 3 }
     end
+
+    context "when is used chain of methods" do
+      subject { Product.where(title: "Product").where(body: "Awesome Product").count }
+
+      it { is_expected.to eq 1 }
+    end
   end
 end
