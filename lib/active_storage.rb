@@ -1,3 +1,5 @@
+require "active_storage/relation"
+
 require "active_support/concern"
 require "active_support/inflector"
 require "active_support/core_ext/hash"
@@ -18,6 +20,12 @@ module ActiveStorage
     end
 
     def where(attrs = {})
+      records.select do |record|
+        attrs.inject(true) { |result, (key, value)| result && record.public_send(key) == value }
+      end
+    end
+
+    def records
       records = CSV.read(storage_path, col_sep: ";")
 
       headers = records.first
@@ -26,10 +34,7 @@ module ActiveStorage
         params = Hash[*[headers, record].transpose.flatten]
         Product.new(params)
       end
-
-      records.select do |record|
-        attrs.inject(true) { |result, (key, value)| result && record.public_send(key) == value }
-      end
+      Relation.new(records)
     end
 
     def attributes(*attrs)

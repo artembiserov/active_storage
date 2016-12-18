@@ -9,7 +9,7 @@ describe 'ActiveStorages' do
   end
 
   describe ".where" do
-    subject { Product.where(params).size }
+    subject { Product.where(params).count }
 
     context do
       let(:params) { { title: "Product", body: "Awesome Product" } }
