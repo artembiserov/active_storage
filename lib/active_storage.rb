@@ -27,21 +27,35 @@ module ActiveStorage
     end
   end
 
+  def persisted?
+    id.present?
+  end
+
   def save
-    if id
-      table = CSV.table(self.class.storage_path, col_sep: ";", headers: true)
-      table.delete_if { |row| row[:id].to_s == id }
+    persisted? ? remove_old_record : generate_id
 
-      File.open(self.class.storage_path, "w") do |f|
-        f.write(table.to_csv)
-      end
-    else
-      self.id = Time.current.to_f
+    insert
+  end
+
+  def remove_old_record
+    table = CSV.table(self.class.storage_path, col_sep: ";", headers: true)
+    table.delete_if { |row| row[:id].to_s == id }
+
+    File.open(self.class.storage_path, "w") do |f|
+      f.write(table.to_csv)
     end
+  end
 
+  private
+
+  def insert
     CSV.open(self.class.storage_path, "ab") do |csv|
       csv << ["id", *@@attributes].map { |attr| public_send(attr) }
     end
+  end
+
+  def generate_id
+    self.id = Time.current.to_f
   end
 
   class_methods do

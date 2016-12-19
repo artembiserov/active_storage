@@ -4,7 +4,6 @@ require "pry"
 describe 'ActiveStorages' do
   describe ".count" do
     it "returns count of records" do
-      Product.all.first.save
       expect(Product.count).to eq(3)
     end
   end
