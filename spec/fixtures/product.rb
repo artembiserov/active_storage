@@ -3,7 +3,7 @@ require "./lib/active_storage"
 class Product
   include ActiveStorage
 
-  attributes :id, :title, :body
+  attributes :title, :body
 
   def self.database_path
     "./spec/fixtures"

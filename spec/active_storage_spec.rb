@@ -4,6 +4,7 @@ require "pry"
 describe 'ActiveStorages' do
   describe ".count" do
     it "returns count of records" do
+      Product.all.first.save
       expect(Product.count).to eq(3)
     end
   end
@@ -33,6 +34,14 @@ describe 'ActiveStorages' do
       subject { Product.where(title: "Product").where(body: "Awesome Product").count }
 
       it { is_expected.to eq 1 }
+    end
+  end
+
+  describe "#assign_attributes" do
+    let(:product) { Product.new }
+
+    it "changes record's attribute" do
+      expect { product.assign_attributes(title: "Product") }.to change { product.title }.from(nil).to("Product")
     end
   end
 end
