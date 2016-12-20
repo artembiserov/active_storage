@@ -10,11 +10,13 @@ module ActiveStorage
   extend ActiveSupport::Concern
 
   def initialize(params = {})
+    self.class.connect
+
     self.id = params["id"]
     assign_attributes(params.slice(*@@attributes))
   end
 
-  included do
+  included do |base|
     attr_reader :id
 
     private
@@ -49,7 +51,7 @@ module ActiveStorage
   private
 
   def insert
-    CSV.open(self.class.storage_path, "ab") do |csv|
+    CSV.open(self.class.storage_path, "ab", col_sep: ";") do |csv|
       csv << ["id", *@@attributes].map { |attr| public_send(attr) }
     end
   end
@@ -72,6 +74,8 @@ module ActiveStorage
     end
 
     def records
+      connect
+
       table = CSV.read(storage_path, col_sep: ";", headers: true)
       records = table.entries
 
@@ -96,8 +100,12 @@ module ActiveStorage
       "#{database_path}/#{storage_file_name}.csv"
     end
 
-    def database_path
-      "./database"
+    def connect
+      return if File.exists?(storage_path)
+
+      CSV.open(storage_path, "ab", col_sep: ";") do |csv|
+        csv << ["id", *@@attributes]
+      end
     end
   end
 end
