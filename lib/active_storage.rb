@@ -107,6 +107,7 @@ module ActiveStorage
     def connect
       return if File.exists?(storage_path)
 
+      FileUtils.mkdir_p(database_path)
       CSV.open(storage_path, "ab", col_sep: ";") do |csv|
         csv << ["id", *@@attributes]
       end
