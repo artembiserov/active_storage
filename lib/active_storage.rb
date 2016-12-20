@@ -100,6 +100,10 @@ module ActiveStorage
       "#{database_path}/#{storage_file_name}.csv"
     end
 
+    def database_path
+      "./database"
+    end
+
     def connect
       return if File.exists?(storage_path)
 
