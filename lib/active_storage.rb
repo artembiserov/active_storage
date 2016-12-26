@@ -16,10 +16,11 @@ module ActiveStorage
     assign_attributes(params.slice(*@@attributes))
   end
 
-  included do |base|
+  included do
     attr_reader :id
 
     private
+
     attr_writer :id
   end
 
@@ -93,7 +94,7 @@ module ActiveStorage
     end
 
     def storage_file_name
-      "#{self.to_s.tableize}"
+      to_s.tableize
     end
 
     def storage_path
@@ -105,7 +106,7 @@ module ActiveStorage
     end
 
     def connect
-      return if File.exists?(storage_path)
+      return if File.exist?(storage_path)
 
       FileUtils.mkdir_p(database_path)
       CSV.open(storage_path, "ab", col_sep: ";") do |csv|
