@@ -1,5 +1,4 @@
 require "./spec/fixtures/product"
-require "pry"
 
 describe 'ActiveStorages' do
   describe ".count" do
