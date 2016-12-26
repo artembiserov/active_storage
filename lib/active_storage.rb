@@ -82,7 +82,7 @@ module ActiveStorage
 
       records.map do |record|
         params = Hash[*record.to_a.flatten]
-        Product.new(params)
+        new(params)
       end
     end
 
