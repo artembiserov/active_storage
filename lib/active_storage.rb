@@ -40,6 +40,20 @@ module ActiveStorage
     end
   end
 
+  def inspect
+    "#<#{self.class.name}:#{object_id} #{attributes}>"
+  end
+
+  def attributes
+    Hash.new { |h, param| h[param] = public_send(param) }.tap do |hash|
+      full_attributes_list.each(&hash)
+    end
+  end
+
+  def full_attributes_list
+    ["id"] + @@attributes
+  end
+
   class_methods do
     def attributes(*attrs)
       @@attributes = attrs.map(&:to_s).reject { |attr| attr == "id" }

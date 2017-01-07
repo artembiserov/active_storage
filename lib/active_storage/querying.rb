@@ -5,7 +5,7 @@ module ActiveStorage
     end
 
     def where(attrs = {})
-      raise ArgumentError, "You must pass an hash as an argument" unless params.is_a?(Hash)
+      raise ArgumentError, "You must pass an hash as an argument" unless attrs.is_a?(Hash)
 
       Relation.new(records).where(attrs)
     end
