@@ -14,6 +14,8 @@ module ActiveStorage
   include Store
 
   def initialize(params = {})
+    raise ArgumentError, "You must pass an hash as an argument" unless params.is_a?(Hash)
+
     self.class.connect
 
     self.id = params["id"]
@@ -31,6 +33,8 @@ module ActiveStorage
   end
 
   def assign_attributes(params)
+    raise ArgumentError, "You must pass an hash as an argument" unless params.is_a?(Hash)
+
     params.each do |key, value|
       public_send("#{key}=", value)
     end
