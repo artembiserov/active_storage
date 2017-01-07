@@ -62,6 +62,10 @@ module ActiveStorage
     ["id"] + @@attributes
   end
 
+  def self.configure(&block)
+    config.instance_eval(&block)
+  end
+
   class_methods do
     def attributes(*attrs)
       @@attributes = attrs.map(&:to_s).reject { |attr| attr == "id" }

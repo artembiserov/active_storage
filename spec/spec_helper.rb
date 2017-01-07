@@ -1,3 +1,5 @@
 require "./lib/active_storage"
 
-ActiveStorage.config.database_path = "./spec/fixtures"
+ActiveStorage.configure do |config|
+  config.database_path = "./spec/fixtures"
+end
