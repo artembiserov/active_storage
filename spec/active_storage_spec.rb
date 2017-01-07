@@ -1,3 +1,4 @@
+require "./spec/spec_helper"
 require "./spec/fixtures/product"
 
 describe "ActiveStorages" do

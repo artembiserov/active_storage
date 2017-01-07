@@ -17,7 +17,7 @@ module ActiveStorage
     def records
       connect
 
-      table = CSV.read(storage_path, col_sep: ";", headers: true)
+      table = CSV.read(storage_path, col_sep: config.col_sep, headers: true)
       records = table.entries
 
       records.map do |record|

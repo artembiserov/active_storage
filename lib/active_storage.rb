@@ -3,7 +3,9 @@ require "active_support/inflector"
 require "active_support/core_ext/hash"
 require "active_support/core_ext/time"
 require "csv"
+require "pry"
 
+require "active_storage/configuration"
 require "active_storage/relation"
 require "active_storage/store"
 require "active_storage/querying"
@@ -12,6 +14,10 @@ module ActiveStorage
   extend ActiveSupport::Concern
 
   include Store
+
+  mattr_accessor :config do
+    ActiveStorage::Configuration
+  end
 
   def initialize(params = {})
     raise ArgumentError, "You must pass an hash as an argument" unless params.is_a?(Hash)
@@ -24,6 +30,8 @@ module ActiveStorage
 
   included do
     extend Querying
+
+    cattr_accessor :config
 
     attr_reader :id
 
@@ -67,18 +75,14 @@ module ActiveStorage
     end
 
     def storage_path
-      "#{database_path}/#{storage_file_name}.csv"
-    end
-
-    def database_path
-      "./database"
+      "#{config.database_path}/#{storage_file_name}.csv"
     end
 
     def connect
       return if File.exist?(storage_path)
 
-      FileUtils.mkdir_p(database_path)
-      CSV.open(storage_path, "ab", col_sep: ";") do |csv|
+      FileUtils.mkdir_p(config.database_path)
+      CSV.open(storage_path, "ab", col_sep: config.col_sep) do |csv|
         csv << ["id", *@@attributes]
       end
     end

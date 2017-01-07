@@ -11,7 +11,7 @@ module ActiveStorage
     end
 
     def remove_old_record
-      table = CSV.table(self.class.storage_path, col_sep: ";", headers: true)
+      table = CSV.table(self.class.storage_path, col_sep: config.col_sep, headers: true)
       table.delete_if { |row| row[:id].to_s == id }
 
       File.open(self.class.storage_path, "w") do |f|
@@ -22,7 +22,7 @@ module ActiveStorage
     private
 
     def insert
-      CSV.open(self.class.storage_path, "ab", col_sep: ";") do |csv|
+      CSV.open(self.class.storage_path, "ab", col_sep: config.col_sep) do |csv|
         csv << ["id", *@@attributes].map { |attr| public_send(attr) }
       end
     end
