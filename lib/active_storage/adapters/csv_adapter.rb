@@ -12,6 +12,15 @@ module ActiveStorage
         end
       end
 
+      def records(klass)
+        records = table(klass).entries
+
+        records.map do |record|
+          params = Hash[*record.to_a.flatten]
+          klass.new(params)
+        end
+      end
+
       def save(record)
         persisted?(record) ? remove_old_record(record) : generate_id(record)
 
@@ -20,16 +29,6 @@ module ActiveStorage
 
       def persisted?(record)
         record.id.present?
-      end
-
-      def records(klass)
-        table = CSV.read(klass.storage_path, col_sep: config.col_sep, headers: true)
-        records = table.entries
-
-        records.map do |record|
-          params = Hash[*record.to_a.flatten]
-          klass.new(params)
-        end
       end
 
       def where(records, attrs)
@@ -41,12 +40,16 @@ module ActiveStorage
       private
 
       def remove_old_record(record)
-        table = CSV.table(record.class.storage_path, col_sep: config.col_sep, headers: true)
+        table = table(record.class)
         table.delete_if { |row| row[:id].to_s == record.id }
 
         File.open(record.class.storage_path, "w") do |f|
           f.write(table.to_csv)
         end
+      end
+
+      def table(klass)
+        CSV.read(klass.storage_path, col_sep: config.col_sep, headers: true)
       end
 
       def generate_id(record)
