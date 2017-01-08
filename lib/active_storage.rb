@@ -26,7 +26,7 @@ module ActiveStorage
     self.class.connect
 
     self.id = params["id"]
-    assign_attributes(params.slice(*attributes))
+    assign_attributes(params.slice(*attribute_names))
   end
 
   included do
