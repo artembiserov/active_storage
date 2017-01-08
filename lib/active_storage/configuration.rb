@@ -9,7 +9,7 @@ module ActiveStorage
     end
 
     mattr_accessor :adapter do
-      # CsvAdapter
+      Adapters::CsvAdapter
     end
   end
 end

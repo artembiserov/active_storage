@@ -16,14 +16,7 @@ module ActiveStorage
 
     def records
       connect
-
-      table = CSV.read(storage_path, col_sep: config.col_sep, headers: true)
-      records = table.entries
-
-      records.map do |record|
-        params = Hash[*record.to_a.flatten]
-        new(params)
-      end
+      config.adapter.records(self)
     end
   end
 end

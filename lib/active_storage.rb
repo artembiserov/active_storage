@@ -5,6 +5,7 @@ require "active_support/core_ext/time"
 require "csv"
 require "pry"
 
+require "active_storage/adapters/csv_adapter"
 require "active_storage/configuration"
 require "active_storage/relation"
 require "active_storage/store"
@@ -25,13 +26,14 @@ module ActiveStorage
     self.class.connect
 
     self.id = params["id"]
-    assign_attributes(params.slice(*@@attributes))
+    assign_attributes(params.slice(*attributes))
   end
 
   included do
     extend Querying
 
     cattr_accessor :config
+    cattr_accessor :attribute_names
 
     attr_reader :id
 
@@ -59,7 +61,7 @@ module ActiveStorage
   end
 
   def full_attributes_list
-    ["id"] + @@attributes
+    ["id"] + attribute_names
   end
 
   def self.configure(&block)
@@ -67,10 +69,10 @@ module ActiveStorage
   end
 
   class_methods do
-    def attributes(*attrs)
-      @@attributes = attrs.map(&:to_s).reject { |attr| attr == "id" }
+    def properties(*attrs)
+      self.attribute_names = attrs.map(&:to_s).reject { |attr| attr == "id" }
       class_eval do
-        attr_accessor(*@@attributes)
+        attr_accessor(*attribute_names)
       end
     end
 
@@ -83,12 +85,7 @@ module ActiveStorage
     end
 
     def connect
-      return if File.exist?(storage_path)
-
-      FileUtils.mkdir_p(config.database_path)
-      CSV.open(storage_path, "ab", col_sep: config.col_sep) do |csv|
-        csv << ["id", *@@attributes]
-      end
+      config.adapter.connect(self)
     end
   end
 end

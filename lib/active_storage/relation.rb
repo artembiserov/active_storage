@@ -13,10 +13,15 @@ module ActiveStorage
     def where(attrs = {})
       raise ArgumentError, "You must pass an hash as an argument" unless attrs.is_a?(Hash)
 
-      @records = records.select do |record|
-        attrs.inject(true) { |result, (key, value)| result && record.public_send(key) == value }
-      end
+      @records = config.adapter.where(records, attrs)
+
       self
+    end
+
+    private
+
+    def config
+      ActiveStorage.config
     end
   end
 end
