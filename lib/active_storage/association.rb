@@ -6,7 +6,7 @@ module ActiveStorage
 
         define_method name do
           klass = name.to_s.classify.constantize
-          parent_id = self.public_send(foreign_key)
+          parent_id = public_send(foreign_key)
 
           klass.where(id: parent_id).first
         end

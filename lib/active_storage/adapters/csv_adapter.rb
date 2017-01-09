@@ -53,7 +53,7 @@ module ActiveStorage
       end
 
       def generate_id(record)
-      record.id = Time.current.to_f
+        record.id = Time.current.to_f + rand
       end
 
       def insert(record)

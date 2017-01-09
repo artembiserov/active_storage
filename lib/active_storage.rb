@@ -71,8 +71,8 @@ module ActiveStorage
     config.instance_eval(&block)
   end
 
-  def ==(other_object)
-    other_object.is_a?(self.class) && other_object.id == id && id != nil
+  def ==(other)
+    other.is_a?(self.class) && other.id == id && !id.nil?
   end
 
   class_methods do
