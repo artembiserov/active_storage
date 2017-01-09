@@ -67,7 +67,7 @@ module ActiveStorage
   end
 
   def self.configure(&block)
-    config.instance_eval(&block)
+    config.instance_eval(&block) if block_given?
   end
 
   def ==(other)
