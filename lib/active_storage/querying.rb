@@ -14,6 +14,10 @@ module ActiveStorage
       where
     end
 
+    def find(id)
+      where(id: id.to_s).first
+    end
+
     def records
       connect
       config.adapter.records(self)

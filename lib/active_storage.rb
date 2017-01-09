@@ -2,11 +2,13 @@ require "active_support/concern"
 require "active_support/inflector"
 require "active_support/core_ext/hash"
 require "active_support/core_ext/time"
+require "active_support/dependencies"
 require "csv"
 require "pry"
 
 require "active_storage/adapters/csv_adapter"
 require "active_storage/configuration"
+require "active_storage/association"
 require "active_storage/relation"
 require "active_storage/store"
 require "active_storage/querying"
@@ -31,6 +33,7 @@ module ActiveStorage
 
   included do
     extend Querying
+    extend Association
 
     cattr_accessor :config
     cattr_accessor :attribute_names
@@ -66,6 +69,10 @@ module ActiveStorage
 
   def self.configure(&block)
     config.instance_eval(&block)
+  end
+
+  def ==(other_object)
+    other_object.is_a?(self.class) && other_object.id == id && id != nil
   end
 
   class_methods do

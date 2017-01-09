@@ -1,4 +1,6 @@
+require "./spec/spec_helper"
 require "./spec/fixtures/product"
+require "./spec/fixtures/sku"
 
 describe "ActiveStorages::Association" do
   let(:product) { Product.find(1) }
