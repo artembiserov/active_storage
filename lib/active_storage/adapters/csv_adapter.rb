@@ -17,7 +17,11 @@ module ActiveStorage
 
         records.map do |record|
           params = Hash[*record.to_a.flatten]
-          klass.new(params)
+
+          klass.new.tap do |new_record|
+            new_record.send(:id=, params.delete("id"))
+            new_record.assign_attributes(params)
+          end
         end
       end
 
