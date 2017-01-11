@@ -3,7 +3,6 @@ require "active_support/inflector"
 require "active_support/core_ext/hash"
 require "active_support/core_ext/time"
 require "csv"
-require "pry"
 
 require "active_storage/adapters/csv_adapter"
 require "active_storage/configuration"
