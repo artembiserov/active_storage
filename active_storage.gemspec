@@ -1,4 +1,4 @@
-$:.push File.expand_path("../lib", __FILE__)
+$LOAD_PATH.push File.expand_path("../lib", __FILE__)
 
 # Maintain your gem's version:
 require "active_storage/version"
@@ -15,4 +15,5 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
 
   # s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  s.add_runtime_dependency "activesupport", "~> 5.0.1"
 end

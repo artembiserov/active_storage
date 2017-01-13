@@ -2,7 +2,15 @@
 Short description and motivation.
 
 ## Usage
-How to use my plugin.
+```ruby
+require "active_storage"
+
+class Product
+  include ActiveStorage
+
+  properties :title, :body
+end
+```
 
 ## Installation
 Add this line to your application's Gemfile:
